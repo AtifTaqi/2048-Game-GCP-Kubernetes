@@ -41,6 +41,9 @@ jobs:
       with:
           workload_identity_provider: //iam.googleapis.com/projects/126557959099/locations/global/workloadIdentityPools/atif-pool/attribute.repository/2048-Game-GCP-Kubernetes
           service_account: googel-container-registry@gcp-atif.iam.gserviceaccount.com
+          create_credentials_file: 'true'
+          access_token_lifetime: 300s
+          token_format: 'access_token'
  
     - name: Configure Docker
       run: gcloud auth configure-docker --quiet
