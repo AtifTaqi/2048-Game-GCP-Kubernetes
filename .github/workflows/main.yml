@@ -32,6 +32,9 @@ jobs:
       with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+    - name: Configure Docker
+      run: gcloud auth configure-docker --quiet
 
 
     # Setup gcloud CLI
@@ -42,21 +45,34 @@ jobs:
           workload_identity_provider: //iam.googleapis.com/projects/126557959099/locations/global/workloadIdentityPools/atif-pool/attribute.repository/2048-Game-GCP-Kubernetes
           service_account: googel-container-registry@gcp-atif.iam.gserviceaccount.com
 
-    - name: Configure Docker
-      run: gcloud auth configure-docker --quiet
-       
-    - uses: RafikFarhad/push-to-gcr-github-action@v5-beta
-      with:
-          # gcloud_service_key: ${{ secrets.GCLOUD_SERVICE_KEY }} # can be base64 encoded or plain text || not needed if you use google-github-actions/auth
-           registry: gcr.io
-           project_id: gcp-atif
-           image_name: game-2048
-           image_tag: ${{ github.sha }}
-           dockerfile: Dockerfile
-           #context: ./docker-context.md
+    - uses: actions/checkout@v3
+      name: Building and pushing the image
+      
+    -  uses: RafikFarhad/push-to-gcr-github-action@v5-beta
+       with:
+          gcloud_service_key: "${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }}"
+          registry: gcr.io
+          project_id: gcp-atif
+          image_name: game-2048
+          image_tag: ${{ github.sha }}
+          dockerfile: Dockerfile
+         # context: ./test
+        #  target: build
     - run: |
        docker build -t gcr.io/gcp-atif/game-2048:${{ github.sha }} . 
        docker push gcr.io/gcp-atif/game-2048:${{ github.sha }}
+       
+              
+ #   - uses: RafikFarhad/push-to-gcr-github-action@v5-beta
+  #    with:
+   #       # gcloud_service_key: ${{ secrets.GCLOUD_SERVICE_KEY }} # can be base64 encoded or plain text || not needed if you use google-github-actions/auth
+    #       registry: gcr.io
+     #      project_id: gcp-atif
+      #     image_name: game-2048
+       #    image_tag: ${{ github.sha }}
+        #   dockerfile: Dockerfile
+         #  #context: ./docker-context.md
+         
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
@@ -88,10 +104,10 @@ jobs:
      
      # Push the Docker image to Google Container Registry      
      
-    - name: Build the hello-docker Docker image
-      run: |
-       docker build -t gcr.io/gcp-atif/game-2048:$GITHUB_RUN_ID .
-       docker push gcr.io/gcp-atif/game-2048:$GITHUB_RUN_ID
+ #   - name: Build the hello-docker Docker image
+  #    run: |
+   #    docker build -t gcr.io/gcp-atif/game-2048:$GITHUB_RUN_ID .
+    #   docker push gcr.io/gcp-atif/game-2048:$GITHUB_RUN_ID
 
     - name: Set up Kustomize
       run: |-
