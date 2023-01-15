@@ -47,12 +47,12 @@ jobs:
            registry: gcr.io
            project_id: gcp-atif
            image_name: game-2048
-           image_tag: $GITHUB_RUN_ID
+           image_tag: ${{ github.sha }}
            dockerfile: Dockerfile
            #context: ./docker-context.md
     - run: |
-       docker build -t gcr.io/gcp-atif/game-2048:$GITHUB_RUN_ID . \
-       docker push gcr.io/gcp-atif/game-2048:$GITHUB_RUN_ID
+       docker build -t gcr.io/gcp-atif/game-2048:${{ github.sha }} . 
+       docker push gcr.io/gcp-atif/game-2048:${{ github.sha }}
     
  #   - id: 'auth'
   #    uses: 'google-github-actions/auth@v1'
