@@ -51,11 +51,12 @@ jobs:
 
        docker build -t gcr.io/gcp-atif/game-2048:${{ github.sha }} . 
        gcloud --quiet auth configure-docker
-       gcloud config set project gcp-atif
-       gcloud services enable \
-        containerregistry.googleapis.com \
-        container.googleapis.com
-       docker push gcr.io/gcp-atif/game-2048:${{ github.sha }}    
+       docker push gcr.io/gcp-atif/game-2048:${{ github.sha }} 
+     #  gcloud config set project gcp-atif
+      # gcloud services enable \
+       # containerregistry.googleapis.com \
+       # container.googleapis.com
+          
   
   Deploy:
     runs-on: ubuntu-latest
