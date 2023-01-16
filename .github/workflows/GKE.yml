@@ -1,6 +1,9 @@
 name: Deploy-GKE
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
 
 env:
   GKE_PROJECT: ${{ secrets.PROJECT.ID }}
@@ -31,13 +34,9 @@ jobs:
     - name: Build and Push
       working-directory: .
       run: |-  
-        docker build \
-          --tag "$GKE_REGION-docker.pkg.dev/$GKE_PROJECT/$GKE_PROJECT/$GKE_APP_NAME:$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" \
-          .
-        gcloud auth configure-docker $GKE_REGION-docker.pkg.dev --quiet
-        docker push "$GKE_REGION-docker.pkg.dev/$GKE_PROJECT/$GKE_PROJECT/$GKE_APP_NAME:$GITHUB_SHA"     
+        docker build -t gcr.io/gcp-atif/game-2048:${{ github.sha }} . 
+        gcloud auth configure-docker $GKE_REGION --quiet
+        docker push gcr.io/gcp-atif/game-2048:${{ github.sha }}    
   Deploy:
     runs-on: ubuntu-latest
     environment: prod
