@@ -68,7 +68,6 @@ jobs:
         cluster_name: google-cluster
         project_id: gcp-atif
         location: asia-south2-a
-        credentials: ${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }}
 
     # Deploy the new Docker image to the GKE cluster
     - name: Deploy
