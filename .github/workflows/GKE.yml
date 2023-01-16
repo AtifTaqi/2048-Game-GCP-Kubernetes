@@ -87,6 +87,9 @@ jobs:
       with:
         cluster_name: 'google-cluster'
         location: 'asia-south2-a'
+        workload_identity_provider: projects/126557959099/locations/global/workloadIdentityPools/atif-pool
+        service_account: googel-container-registry@gcp-atif.iam.gserviceaccount.com
+        
 
     # The KUBECONFIG env var is automatically exported and picked up by kubectl.
     - id: 'get-pods'
