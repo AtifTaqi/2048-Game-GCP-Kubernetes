@@ -22,6 +22,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      
+ # Configure Workload Identity Federation for Google Cloud
+    - id: auth
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+          workload_identity_provider: projects/126557959099/locations/global/workloadIdentityPools/atif-pool
+          service_account: googel-container-registry@gcp-atif.iam.gserviceaccount.com
+          create_credentials_file: true
 
     # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@v0.6.0
