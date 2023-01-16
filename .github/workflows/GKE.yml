@@ -34,9 +34,18 @@ jobs:
     - name: Build and Push
       working-directory: .
       run: |-  
-        docker build -t gcr.io/gcp-atif/game-2048:${{ github.sha }} . 
-        gcloud auth configure-docker $GKE_REGION --quiet
-        docker push gcr.io/gcp-atif/game-2048:${{ github.sha }}    
+        docker build \
+          --tag "$GKE_REGION-docker/$GKE_PROJECT/$GKE_PROJECT/$GKE_APP_NAME:$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          .
+        gcloud auth configure-docker $GKE_REGION-docker --quiet
+        docker push "$GKE_REGION-docker/$GKE_PROJECT/$GKE_PROJECT/$GKE_APP_NAME:$GITHUB_SHA"     
+  
+     # run: |-  
+      #  docker build -t gcr.io/gcp-atif/game-2048:${{ github.sha }} . 
+      #  gcloud auth configure-docker $GKE_REGION --quiet
+       # docker push gcr.io/gcp-atif/game-2048:${{ github.sha }}    
   Deploy:
     runs-on: ubuntu-latest
     environment: prod
