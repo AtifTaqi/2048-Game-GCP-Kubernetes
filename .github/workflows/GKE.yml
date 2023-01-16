@@ -81,14 +81,16 @@ jobs:
        
     - name: 'Use gcloud CLI'
       run: 'gcloud info'
-
-    # Get the GKE credentials so we can deploy to the cluster
-    - uses: google-github-actions/get-gke-credentials@v1.0.1
+  
+    - id: 'get-credentials'
+      uses: 'google-github-actions/get-gke-credentials@v1'
       with:
-        cluster_name: google-cluster
-        project_id: gcp-atif
-        location: asia-south2-a
+        cluster_name: 'my-cluster'
+        location: 'us-central1-a'
 
+    # The KUBECONFIG env var is automatically exported and picked up by kubectl.
+    - id: 'get-pods'
+      run: 'kubectl get pods'
     # Deploy the new Docker image to the GKE cluster
     - name: Deploy
       working-directory: .
